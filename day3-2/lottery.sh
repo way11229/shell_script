@@ -80,6 +80,8 @@ do
 	let rewardNumbers[$i]=$num
 done
 
+echo "Reward numbers are ${rewardNumbers[@]}"
+
 getReward=0
 for lotterySet in ${lotterySets[@]}
 do
