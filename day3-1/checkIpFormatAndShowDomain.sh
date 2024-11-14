@@ -14,9 +14,9 @@ validateIp() {
 	fi
 
 	local IFS='.'
-	local -a splitedIP=($1)
+	local ip=$1
 
-	for e in "${ip[@]}"
+	for e in ${ip[@]}
 	do
 		[[ $e =~ ^[0-9]+$ ]] || return 1
 		(( e >= 0 && e <= 255 )) || return 1
@@ -27,21 +27,21 @@ validateIp() {
 
 getDecimalDomainParts() {
 	local IFS='.'
-	local -a splitedIP=($1)
-	local -a splitedSubnetMask=($2)
+	local ip=($1)
+	local subnetMask=($2)
 
-	if [[ ${#splitedIP[@]} != 4 ]] ||  [[ ${#splitedSubnetMask[@]} != 4 ]]
+	if [[ ${#ip[@]} != 4 ]] ||  [[ ${#subnetMask[@]} != 4 ]]
 	then
 		return 1
 	fi
 
 	local decimalDomainParts=0
-	for (( i=0; i<${#splitedIP[@]}; i+=1 ))
+	for (( i=0; i<${#ip[@]}; i+=1 ))
 	do
-		local convertIpPartRtn=$(convertToBinary ${splitedIP[$i]})
+		local convertIpPartRtn=$(convertToBinary ${ip[$i]})
 		local binaryIpPart=`echo $convertIpPartRtn | numfmt --format=%08f`
 
-		local convertSubnetMaskPartRtn=$(convertToBinary ${splitedSubnetMask[$i]})
+		local convertSubnetMaskPartRtn=$(convertToBinary ${subnetMask[$i]})
 		local binarySubnetMaskPart=`echo $convertSubnetMaskPartRtn | numfmt --format=%08f`
 
 		let decimalDomainParts[$i]=$((2#$binaryIpPart & 2#$binarySubnetMaskPart))
